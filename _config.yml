@@ -1,7 +1,7 @@
 title: On Raz
 description: Raz's Blog
 
-theme: minima
+theme: sinatra
 
 # Build settings
 markdown: kramdown

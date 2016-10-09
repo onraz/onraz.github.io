@@ -1,0 +1,86 @@
+---
+layout: post
+title: 'Understanding Time: Best Practices for Distributed Applications'
+date: 2014-07-12 15:32:26.000000000 +10:00
+type: post
+published: true
+status: publish
+categories:
+- Design
+tags:
+- best practice
+- design
+- time
+meta:
+  _edit_last: '2'
+  _publicize_twitter_user: '@openraz'
+  _wpas_done_all: '1'
+  _wpas_skip_6313927: '1'
+  _wpas_skip_6313920: '1'
+  _thumbnail_id: '309'
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p><img class="alignleft size-full wp-image-309" src="{{ site.baseurl }}/assets/1405161003_clock.png" alt="1405161003_clock" width="256" height="256" />When representing <span class="il" style="color: #222222;">time</span> in software, we need to be aware of the nature of <span class="il" style="color: #222222;">time</span>. Improper handling of <span class="il" style="color: #222222;">time</span> can easily create tricky issues that are hard to identify.<span style="color: #444444;">[toc]</span></p>
+<h2>Key Concept: <span class="il" style="color: #222222;">Time</span> without location is meaningless</h2>
+<p>It took the genius of Albert Einstein to fully <span class="il" style="color: #222222;">understand</span> the true nature of <span class="il" style="color: #222222;">time</span>. <span class="il" style="color: #222222;">Time</span> can't exist without a location in space, as space and <span class="il" style="color: #222222;">time</span> are inter-connected. Simply put, if it is <span class="aBn" tabindex="0" data-term="goog_1737188022"><span class="aQJ">9 AM</span></span> in Sydney, it is<em> not necessarily</em> <span class="aBn" tabindex="0" data-term="goog_1737188023"><span class="aQJ">9 AM</span></span> everywhere in the universe (unless of course you have a broken watch). Without going into too much details of the Physical properties of <span class="il" style="color: #222222;">time</span>, the important consequence of this concept is:</p>
+<blockquote><p>To accurately represent or measure time in computer software, one must take into account the location where the time was measured.</p></blockquote>
+<p>There is no silver bullet or a technology framework that can solve all <span class="il" style="color: #222222;">time</span> related problems if we don't <span class="il" style="color: #222222;">understand</span> the above nature of <span class="il" style="color: #222222;">time</span>.</p>
+<h2>Time is Relative and Contextual</h2>
+<p>When modelling time, we usually deal with two types of time data,  "<strong>Civil Time</strong>" and "<strong>Physical Time</strong>".</p>
+<h3>Civil Time</h3>
+<p>Civil time is represented as a point on a Calendar or a local clock as agreed by civilian authorities. This is the type of time data we use in our day to day conversations. When capturing Civil Time, we need to be aware of the context in which it is specified. As an example, when we say "<em>Lets catch 9'o clock bus</em>" - a lot of information is implied by the context of the speaker. Such "implied or implicit context" is not always available in software design, and needs to be explicitly specified if the software will be used in more than one <span class="il" style="color: #222222;">time</span> zones.</p>
+<blockquote><p>Therefore, we need to be mindful of the context and timezone when modelling time. In addition, we also need to be aware of local transformations such as Day Light Saving Time (DST).</p></blockquote>
+<h3>Physical Time</h3>
+<p>Physical Time is represented as a point in the continuous universal timeline. This kind of time data can be adequately represented in Universal Time (UTC), which is calculated by reference to atomic clocks. Physical time is useful in storing calculations and measurements, as it is <strong>unambiguous and context-free</strong>.</p>
+<h2>Best Practices</h2>
+<p>Time is a complex topic, however we can still follow some best practices to avoid some pitfalls that may occur in distributed client-server applications.</p>
+<p><strong>1. Persist Globally, Display Locally - When you store <span class="il" style="color: #222222;">time</span>, store it in UTC and use server time: </strong>UTC time is DST agnostic, thus it is a good approach of storing <span class="il" style="color: #222222;">time</span> without confusion.</p>
+<p><strong>2. Late Conversion - Only apply timezone/DST in the <span style="text-decoration: underline;">Last possible moment</span> when you display the <span class="il" style="color: #222222;">time</span> to client: </strong>Only apply timezone formats at the very end, when the <span class="il" style="color: #222222;">time</span> is being displayed at the client terminal/browser. When converting to timezone, remember that timezones may change, and an entire state or country may not be in the same timezone.</p>
+<p><strong>3. Capture Context - When capturing T<span class="il" style="color: #222222;">ime</span> as input, take into consideration how the client is specifying the <span class="il" style="color: #222222;">time</span>, and for what purpose: </strong>Understand the context in which a <span class="il" style="color: #222222;">time</span> related information is specified. Here are a few examples of different contexts where the meaning of <span class="il" style="color: #222222;">time</span> can vary:</p>
+<table>
+<thead>
+<tr>
+<th>Example Type</th>
+<th>Example Usage</th>
+<th>Contextual Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Event <span class="il" style="color: #222222;">Time</span></td>
+<td>The concert is going to start at <span class="aBn" tabindex="0" data-term="goog_1737188024"><span class="aQJ">10pm</span></span></td>
+<td>Event <span class="il" style="color: #222222;">time</span> is always relative to the location of where the event takes place</td>
+</tr>
+<tr>
+<td>Contract <span class="il" style="color: #222222;">Time</span></td>
+<td>The car insurance is valid till <span class="aBn" tabindex="0" data-term="goog_1737188025"><span class="aQJ">31st January</span></span> next year</td>
+<td>Depending on the insurance company's policies, the policy will expire at <span class="aBn" tabindex="0" data-term="goog_1737188026"><span class="aQJ">5pm 31st January</span></span> depending on where the policy is purchased from. Exact meaning needs to be clarified.</td>
+</tr>
+<tr>
+<td>Recurring <span class="il" style="color: #222222;">Time</span></td>
+<td>The TV show airs every day at <span class="aBn" tabindex="0" data-term="goog_1737188027"><span class="aQJ">9am</span></span></td>
+<td>Everyday at <span class="aBn" tabindex="0" data-term="goog_1737188028"><span class="aQJ">9am</span></span> local <span class="il" style="color: #222222;">time</span>, regardless of DST</td>
+</tr>
+<tr>
+<td>Floating Durations</td>
+<td>Tech support available during Business HoursExpress Trains available during Peak Hours on Weekdays</td>
+<td>Always based on local time and day of week, subjected to holidays etc.</td>
+</tr>
+<tr>
+<td colspan="1"><span class="il" style="color: #222222;">Time</span> interval or relative <span class="il" style="color: #222222;">time</span></td>
+<td colspan="1">Contract is due for renewal every year..<br />
+or We charge you phone fee on a monthly basis</td>
+<td colspan="1">Storing agreed interval from a reference point.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><strong>4. Use the Universally Accepted ISO format for Web Services</strong></p>
+<p>When designing web based services that expose time (e.g. created date, modified data) it is best to keep it in a human readable ie. string form rather than a long number. It allows interoperability between different types of clients, and also allows humans to understand and debug the service. Standardised formats as ISO 8601 should be considered.</p>
+<blockquote><p>A poor choice in representing date/time for web services is Numeric time (e.g. Long 1341542232312) - which has limited readability, usability or portability.</p></blockquote>
+<p>ISO date format is the best choice for a date representation that is accurately/universally (e.g. W3C) understandable. Reference: <a href="http://en.wikipedia.org/wiki/ISO_8601" target="_blank" rel="nofollow">http://en.wikipedia.org/<wbr />wiki/ISO_8601</a></p>

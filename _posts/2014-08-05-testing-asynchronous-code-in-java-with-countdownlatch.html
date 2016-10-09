@@ -1,0 +1,147 @@
+---
+layout: post
+title: Testing Asynchronous Code in Java with CountDownLatch
+date: 2014-08-05 16:42:20.000000000 +10:00
+type: post
+published: true
+status: publish
+categories:
+- java
+tags:
+- concurrency
+- java
+- testing
+meta:
+  _wpas_skip_6313920: '1'
+  _wpas_skip_6313927: '1'
+  _publicize_twitter_user: '@openraz'
+  _jetpack_related_posts_cache: a:1:{s:32:"8f6677c9d6b0f903e98ad32ec61f8deb";a:2:{s:7:"expires";i:1407241352;s:7:"payload";a:0:{}}}
+  _edit_last: '2'
+  _wpas_done_all: '1'
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p>Asynchronous Event driven applications are becoming ever more common, and testing the correctness of these applications can be tricky. However, there are some techniques and tools available to aid testing asynchronous code - one such tool is a CountDownLatch.</p>
+<h2>Executing Concurrent Tasks</h2>
+<p>Suppose we have an application that runs simple tasks. These tasks can take varying amount of time to finish. Upon the completion of a task, a task can be marked as executed.</p>
+<pre class="lang:default decode:true ">class Task implements Runnable {
+	private String taskId;
+	private boolean executed;
+	
+	public Task(String taskId) {
+		this.taskId = taskId;
+	}
+	
+	@Override
+	public void run() {
+		System.out.println("Performed task " + taskId);
+		executed = true;
+	}
+	
+	public boolean hasExecuted() {
+		return executed;
+	}
+}</pre>
+<p>The Tasks are run by a TaskRunner object, which uses an Executor Service to run tasks concurrently:</p>
+<pre class="lang:default decode:true">class TaskRunner {
+	ExecutorService executor = Executors.newCachedThreadPool();
+
+	public void executeTasks(List&lt;Task&gt; tasks) {
+		for (Task task : tasks) {
+			executor.submit(task);
+		}
+	}
+	
+	public void tearDown() {
+		executor.shutdown();
+	}
+}</pre>
+<h2>Basic Test Case</h2>
+<p>If we have to write a very basic test case for the task runner, it may look like:</p>
+<pre class="lang:default decode:true">@Test
+public void testExecution() throws InterruptedException {
+	// Generate Sample Tasks
+	List&lt;Task&gt; tasks = new ArrayList&lt;&gt;();
+	for (int i = 0; i &lt; 10; i++) {
+		tasks.add(new Task("Task " + i));
+	}
+	
+	taskRunner.executeTasks(tasks);
+	
+	// Give the tasks sufficient time to finish
+	Thread.sleep(2000);
+	
+	for (Task task : tasks) {
+		assertTrue(task.hasExecuted());
+	}
+}</pre>
+<p>In the above test we had to a <span style="font-family: 'courier new', courier;">Thread.sleep()</span> of 2 seconds because the tasks may not have finished before we reach assert statements.  However, the tasks may take more or less than 2 seconds to finish.</p>
+<p>There are at least two problems with this approach:</p>
+<ul>
+<li>The test is unreliable, as running the tests on a faster or slower machine or build agent influences the result of the test.</li>
+<li>These kind of tests also make the build slower when unit tests are run as part of the build. This goes against the principles of <a href="http://en.wikipedia.org/wiki/Continuous_integration#Keep_the_build_fast">"Continuous Integration"</a></li>
+</ul>
+<p>We can circumvent these concerns with a CountDownLatch</p>
+<h2>What is a CountDownLatch?</h2>
+<p>A CountDownLatch is a construct that allows one or more threads to wait until a set of operations being performed in other thread completes.</p>
+<ul>
+<li>The latch is initialised with a <em>Count</em>, a positive integer e.g. 2</li>
+<li>The thread that calls<span style="font-family: 'courier new', courier;"> latch.await()</span> will block until the <em>Count</em> reaches to <em>Zero</em></li>
+<li>All other threads are required to decrement the Count by calling <span style="font-family: 'courier new', courier;">latch.countDown()</span></li>
+<li>Once the <em>Count</em> reaches Zero, the awaiting thread resumes execution</li>
+</ul>
+<p><img class="alignright wp-image-363" src="{{ site.baseurl }}/assets/tasks.png" alt="tasks" width="270" height="523" />Once a latch reaches Zero, it can no longer be used, a brand new latch needs to be created. However, a CyclicBarrier may be more suited for such requirements.The following is a simple usecase of how to use a CountDownLatch:</p>
+<pre class="font-size:12 width-set:true width:440 striped:false nums:false lang:default decode:true">CountDownLatch latch = new CountDownLatch(3);
+ExecutorService executor = Executors.newCachedThreadPool();
+
+// submit three tasks
+for (int i = 0; i &lt; 3; i++) {
+	executor.submit(new Runnable() {
+		@Override
+		public void run() {
+			// do long running task here
+			System.out.println("Performing long task...");
+			// when task finished, countDown
+			latch.countDown();
+		}
+	});
+}
+
+// wait until task is finished
+latch.await();
+System.out.println("All tasks are done!! ");
+
+executor.shutdown();</pre>
+<h2>Better Tests using Latch</h2>
+<p>The <span style="font-family: 'courier new', courier;">TestRunner</span> test we discussed previously using <span style="font-family: 'courier new', courier;">Thread.sleep(...) </span>can be written using a CountDownLatch. Note how the test calls latch.await() to wait for all tasks to finish before it can verify the assertions.</p>
+<pre class="lang:default decode:true ">@Test
+public void testExecutionLatch() throws InterruptedException {
+	CountDownLatch latch = new CountDownLatch(10);
+	List&lt;Task&gt; tasks = new ArrayList&lt;&gt;();
+	for (int i = 0; i &lt; 10; i++) {
+		// Create latched tasks that countdowns the latch when it finishes
+		tasks.add(new Task("Task " + i) {
+			@Override
+			public void run() {
+				super.run();
+				latch.countDown();
+			}
+		});
+	}
+	
+	taskRunner.executeTasks(tasks);
+	
+	// wait for all tasks to finish
+	latch.await();
+	
+	for (Task task : tasks) {
+		assertTrue(task.hasExecuted());
+	}
+}</pre>
+<p>This gist can be found here: <a href="https://gist.github.com/openraz/21f6bae97795ea145ea0" target="_blank">https://gist.github.com/openraz/21f6bae97795ea145ea0</a></p>
+<p><strong>Tip:</strong><br />
+If a <span style="font-family: 'courier new', courier;">Task</span> doesn't finish due to a bug in our <span style="font-family: 'courier new', courier;">TestRunner</span> implementation, then test may forever block. Thus, its a good idea to impose a timeout on our tests either by introducing timeout parameter in the <span style="font-family: 'courier new', courier;">@Test</span> annotation <span class="lang:default decode:true crayon-inline">@Test(timeout=2000)</span> or simply specifying a timeout in the await  <span class="lang:default decode:true crayon-inline ">latch.await(2, TimeUnit.SECONDS);</span></p>

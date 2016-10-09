@@ -1,0 +1,38 @@
+---
+layout: post
+title: Hacking Wordpress Private Post Count
+date: 2011-01-04 21:47:13.000000000 +11:00
+type: post
+published: true
+status: publish
+categories:
+- Wordpress
+tags:
+- hacks
+- tips
+- wordpress
+meta:
+  _syntaxhighlighter_encoded: '1'
+  views: '0'
+  _wp_old_slug: ''
+  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1366447836;}
+  _edit_last: '2'
+  _wpas_skip_6313920: '1'
+  _wpas_skip_6313927: '1'
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p>May not be a good way to do it, but I modified the wordpress <code>wp-includes/taxonomy.php</code> to enable Private Post counts:</p>
+<p>[php mark=3]<br />
+function _update_post_term_count( $terms, $taxonomy ) {<br />
+// ... line 2461 : _update_count<br />
+$count = $wpdb-&amp;gt;get_var( $wpdb-&amp;gt;prepare( "SELECT COUNT(*) FROM $wpdb-&amp;gt;term_relationships, $wpdb-&amp;gt;posts<br />
+WHERE $wpdb-&amp;gt;posts.ID = $wpdb-&amp;gt;term_relationships.object_id AND post_status IN ('publish','private') AND post_type IN<br />
+('" . implode("', '", $object_types) . "') AND term_taxonomy_id = %d", $term ) );<br />
+// ... other stuff<br />
+}<br />
+[/php]</p>

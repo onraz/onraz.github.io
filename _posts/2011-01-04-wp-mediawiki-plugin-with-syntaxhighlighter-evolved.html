@@ -1,0 +1,35 @@
+---
+layout: post
+title: Wp-Mediawiki plugin with SyntaxHighlighter Evolved
+date: 2011-01-04 12:30:37.000000000 +11:00
+type: post
+published: true
+status: publish
+categories:
+- Wordpress
+tags:
+- tips
+meta:
+  _wp_old_slug: ''
+  views: '9'
+  dsq_thread_id: '202245452'
+  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1368002332;}
+  _wpas_skip_6313920: '1'
+  _wpas_skip_6313927: '1'
+  _edit_last: '2'
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p>Wp-Mediawiki plugin and SyntaxHighlighter Evolved are two of my favourite plugins for wordpress.<br />
+* The WP-Mediawiki allows you to use wiki markups in wordpress, while the,<br />
+* Syntax highlighter plugin highlights syntax in code.</p>
+<p>However, they conflict with eachother due to WP-Mediawiki's preformatting and encoding rules.</p>
+<p>Easy way to fix this is to wrap your code in nowiki tag, for example:</p>
+<pre><nowiki>
+// syntaxhighlighter code goes here
+</nowiki></pre>
+<p>You might also have to disable preformatting in Wp-Mediawiki settings in Wordpress Admin.</p>

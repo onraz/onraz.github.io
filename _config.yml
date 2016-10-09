@@ -1,0 +1,15 @@
+title: On Raz
+description: Raz's Blog
+url: "http://onraz.github.io" # the base hostname & protocol for the site
+
+theme: minima
+
+# Build settings
+markdown: kramdown
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - package.json
+  - node_modules

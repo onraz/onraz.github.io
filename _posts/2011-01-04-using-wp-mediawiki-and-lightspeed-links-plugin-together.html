@@ -1,0 +1,30 @@
+---
+layout: post
+title: Using WP-Mediawiki and Lightspeed Links plugin together
+date: 2011-01-04 13:41:57.000000000 +11:00
+type: post
+published: true
+status: publish
+categories:
+- Wordpress
+tags:
+- tips
+meta:
+  views: '9'
+  _wp_old_slug: ''
+  dsq_thread_id: '202270647'
+  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1368001483;}
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p>WP-Mediawiki and Lightspeed Links are quite useful to create a wiki structure for your blog.</p>
+<p>Where as WP-Mediawiki provides a good subset of mediawiki syntax available to your blog, it doesnt provide a way to do internal linking from one post to another related post.</p>
+<p>Lightspeed links is a great plugin that fills up this gap. When you use them together, you have to '''disable Wikilinks''' in wp-mediawiki settings.</p>
+<p>In this way, Lightspeed links can do the internal linking using this syntax (no spaces between the brackets):</p>
+<pre> [ [ title of post ] ] </pre>
+<p>While WP-Mediawiki does the external linking using wiki syntax.</p>
+<pre> [http://www.gmail.com Google Mail] </pre>

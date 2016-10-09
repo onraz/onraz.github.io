@@ -1,0 +1,49 @@
+---
+layout: post
+title: Display a Category for Logged in User Only
+date: 2011-01-03 18:41:06.000000000 +11:00
+type: post
+published: true
+status: publish
+categories:
+- Wordpress
+tags:
+- tips
+meta:
+  _wpas_skip_6313920: '1'
+  _syntaxhighlighter_encoded: '1'
+  views: '15'
+  dsq_thread_id: '201799425'
+  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1368255560;}
+  _edit_last: '2'
+  _wpas_skip_6313927: '1'
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p>Using PHP Code Widget it is really easy to create a sidebar widget that will display a common list of categories for all users and show a specific category for admin user.</p>
+<p>The steps to do this can be summarised as:</p>
+<p>1. Install the PHP Code Widget plugin for wordpress from http://wordpress.org/extend/plugins/php-code-widget/</p>
+<p>2. Go to wordpress admin &gt; widgets and add the PHP code widget to your sidebar</p>
+<p>3. In the widget settings paste the code (see below) that will display the category list</p>
+<p>[php]</p>
+<ul>
+<?php // List of categories to be excluded for public<br />
+$excl = '10,25,33';<br />
+// If user is logged in,  dont exclude the categories<br />
+if( is_user_logged_in()  ) {<br />
+$excl = '';<br />
+}<br />
+// List the categories hierarchy with counts, no title, and order it by name<br />
+wp_list_categories('show_count=1&amp;title_li=&amp;orderby=name&amp;exclude_tree=' . $excl . '&amp;exclude=' . $excl); ?>
+</ul>
+<p>[/php]</p>
+<p>If you would like to show the excluded category to admin only then replace line 6 with:</p>
+<p>[php]</p>
+<p>// If user is logged in and is an admin, dont exclude the categories<br />
+if( current_user_can('manage_options')) {<br />
+[/php]</p>
+<p>To see all the options available to wp_list_categories see <a href="http://codex.wordpress.org/Template_Tags/wp_list_categories" target="_blank">http://codex.wordpress.org/Template_Tags/wp_list_categories</a></p>

@@ -1,0 +1,36 @@
+---
+layout: post
+title: SyntaxHighlighter Vertical Scrollbar Issue
+date: 2011-01-04 20:40:54.000000000 +11:00
+type: post
+published: true
+status: publish
+categories:
+- Wordpress
+tags:
+- tips
+- wordpress
+meta:
+  _syntaxhighlighter_encoded: '1'
+  dsq_thread_id: '202432237'
+  views: '9'
+  _wp_old_slug: ''
+  reddit: a:2:{s:5:"count";i:0;s:4:"time";i:1367740082;}
+  _wpas_skip_6313920: '1'
+  _wpas_skip_6313927: '1'
+  _edit_last: '2'
+author:
+  login: raz
+  email: razibh@gmail.com
+  display_name: Raz Shahriar
+  first_name: Raz
+  last_name: Shahriar
+---
+<p><a title="SyntaxHighlighter" href="http://alexgorbatchev.com/SyntaxHighlighter" target="_blank">SyntaxHighlighter</a> by Alex G. is a great plugin for clientside syntax highlighting in blogs or wikis.<br />
+The 3.0.83 version of this plugin has a minor issue in Chrome browser where it displays a vertical scrollbar when it is not needed.</p>
+<p>The issue is <a title="Superfluous vertical-scrollbars in Chrome" href="https://bitbucket.org/alexg/syntaxhighlighter/issue/177/superfluous-vertical-scrollbars-in-chrome" target="_blank">described here.</a></p>
+<p>Various solutions are mentioned in there, but the one that worked for me was:</p>
+<p>Replace line 39 in <code>syles/shCore.css</code> with:</p>
+<p>[css]<br />
+padding: 1px 0 !important;<br />
+[/css]</p>

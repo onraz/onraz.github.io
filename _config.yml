@@ -1,6 +1,7 @@
 title: On Raz
 description: Raz's Blog
-url: "http://onraz.github.io" # the base hostname & protocol for the site
+url: "https://onraz.github.io" # the base hostname & protocol for the site
+baseurl: "https://onraz.github.io"
 
 theme: minima
 

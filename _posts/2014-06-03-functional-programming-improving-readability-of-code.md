@@ -16,8 +16,8 @@ Note that a Prime Number is a positive integer greater than 1 that is only divi
 <p>The program to achieve this using a simple imperative style may look like this:</p>
 <pre class="whitespace-before:1 whitespace-after:1 lang:java decode:true">boolean isPrime(int num) {
 	boolean prime = true;
-	if (num &gt; 1) {
-		for (int divisor = 2; divisor &lt; num; divisor++) {
+	if (num > 1) {
+		for (int divisor = 2; divisor < num; divisor++) {
 			if (num % divisor == 0) {
 				prime = false;
 				break;
@@ -32,7 +32,7 @@ Note that a Prime Number is a positive integer greater than 1 that is only divi
 /**
  * Print prime numbers in a given list
  */
-void printPrimes(List&lt;Integer&gt; values) {
+void printPrimes(List<Integer> values) {
 	for (Integer num : values) {
 		if (isPrime(num)) {
 			System.out.println(num);
@@ -41,11 +41,11 @@ void printPrimes(List&lt;Integer&gt; values) {
 }</pre>
 <p>We can write the above in a declarative, functional way as follows:</p>
 <pre class="whitespace-before:1 whitespace-after:1  lang:java decode:true">boolean isPrime(int num) {
-	return num &gt; 1 &amp;&amp; IntStream.range(2, num)
-				.noneMatch(divisor -&gt; num % divisor == 0);
+	return num > 1 &amp;&amp; IntStream.range(2, num)
+				.noneMatch(divisor -> num % divisor == 0);
 }
 
-void printPrimes(List&lt;Integer&gt; values) {
+void printPrimes(List<Integer> values) {
 	values.stream()
 		.filter(Util::isPrime)
 		.forEach(System.out::println);
@@ -59,7 +59,7 @@ void printPrimes(List&lt;Integer&gt; values) {
 <p>Functional Program improves program correctness with immutability and side-effect free functions, hence there is little need for tricky and expensive synchronisation for shared mutable state. These properties make Functional Programming a natural choice for designing highly concurrent and distributed systems.</p>
 <p>Consider how easily the above program could be made concurrent and faster using Parallel Stream:</p>
 <pre class="whitespace-before:1 whitespace-after:1  lang:java decode:true">
-void printPrimes(List&lt;Integer&gt; values) {
+void printPrimes(List<Integer> values) {
 	values.parallelStream()
 		.filter(Util::isPrime)
 		.forEach(System.out::println);

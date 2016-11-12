@@ -73,7 +73,7 @@ These roles can be represented by the following Traits:
 ```groovy
 trait TransferMoneySource implements MoneySource {
 	void withdraw(double amount, MoneyDestination dest) {
-		if (getBalance() &gt; amount) {
+		if (getBalance() > amount) {
 			this.decreaseBalance(amount)
 			dest.deposit(amount)
 			this.updateLog "Withdrawal of ${amount} performed"

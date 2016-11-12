@@ -47,7 +47,7 @@ The Tasks are run by a TaskRunner object, which uses an Executor Service to run
 class TaskRunner {
 	ExecutorService executor = Executors.newCachedThreadPool();
 
-	public void executeTasks(List&lt;Task&gt; tasks) {
+	public void executeTasks(List<Task> tasks) {
 		for (Task task : tasks) {
 			executor.submit(task);
 		}
@@ -67,7 +67,7 @@ If we have to write a very basic test case for the task runner, it may look lik
 public void testExecution() throws InterruptedException {
 	// Generate Sample Tasks
 	List<Task> tasks = new ArrayList<>();
-	for (int i = 0; i &lt; 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		tasks.add(new Task("Task " + i));
 	}
 
@@ -110,7 +110,7 @@ CountDownLatch latch = new CountDownLatch(3);
 ExecutorService executor = Executors.newCachedThreadPool();
 
 // submit three tasks
-for (int i = 0; i &lt; 3; i++) {
+for (int i = 0; i < 3; i++) {
 	executor.submit(new Runnable() {
 		@Override
 		public void run() {
@@ -138,7 +138,7 @@ Note how the test calls `latch.await()` to wait for all tasks to finish before
 public void testExecutionLatch() throws InterruptedException {
 	CountDownLatch latch = new CountDownLatch(10);
 	List<Task> tasks = new ArrayList<>();
-	for (int i = 0; i &lt; 10; i++) {
+	for (int i = 0; i < 10; i++) {
 		// Create latched tasks that countdowns the latch when it finishes
 		tasks.add(new Task("Task " + i) {
 			@Override

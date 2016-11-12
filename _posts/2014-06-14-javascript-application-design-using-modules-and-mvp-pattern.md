@@ -40,9 +40,9 @@ In such approach, the view state and application state may get mixed together 
 
 ```javascript
 // generate the board layout consisting of squares
-for (var row = 0; row &lt; rows; row++) {
-    for (var col = 0; col &lt; cols; col++) {
-        $('div.board').append('&lt;div class="square" row="' + row + '" col="' + col + '"&gt;&lt;/div&gt;')
+for (var row = 0; row < rows; row++) {
+    for (var col = 0; col < cols; col++) {
+        $('div.board').append('<div class="square" row="' + row + '" col="' + col + '"></div>')
     }
 }
 

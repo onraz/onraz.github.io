@@ -3,6 +3,7 @@ title:               On Raz
 description:         Raz's Blog
 tagline:             Raz's Blog about life as a Software Engineer.
 paginate:            5
+baseurl:             https://onraz.github.io
 
 # About/contact
 author:

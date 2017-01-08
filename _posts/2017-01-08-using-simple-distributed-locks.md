@@ -2,8 +2,6 @@
 layout: post
 published: false
 title: Using Simple Distributed Locks
-categories: ''
-tags: ''
 ---
 
 DynamoDb offer simple set of primitives that makes it possible to implement a clustered lock.
@@ -16,10 +14,10 @@ This algorithm trades lock expiration robustness for ease of use. Instead of a r
 
 The critical section of the code must finish before the expiry of the Lock.
 
+```
 Prune expired lock
 Create Item unless exists
 Yield to critical section inside of timeout
 Delete Item
-
-
+```
 

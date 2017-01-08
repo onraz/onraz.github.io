@@ -1,6 +1,6 @@
 ---
 layout: post
-published: false
+published: true
 title: A Test Blog
 ---
 ## Raz

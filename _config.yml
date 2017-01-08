@@ -29,7 +29,6 @@ prose:
   rooturl: '_posts'
   siteurl: 'https://onraz.github.io'
   media: 'assets'
-  relativeLinks: 'https://onraz.github.io/links.jsonp'
   metadata:
     _posts:
       - name: "layout"
@@ -48,7 +47,7 @@ prose:
           label: "Post title"
           placeholder: "Title"
           alterable: true
-	 - name: "tags"
+      - name: "tags"
         field:
           element: "multiselect"
           label: "Add Tags"
@@ -63,4 +62,3 @@ prose:
               value: "distributed"
             - name: "algorithm"
               value: "algorithm"
-  

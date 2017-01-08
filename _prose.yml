@@ -1,0 +1,38 @@
+prose:
+  rooturl: '_posts'
+  siteurl: 'https://onraz.github.io'
+  media: 'assets'
+  relativeLinks: 'https://onraz.github.io/links.jsonp'
+  metadata:
+    _posts:
+      - name: "layout"
+        field:
+          element: "hidden"
+          value: "post"
+      - name: "categories"
+        field:
+          element: "multiselect"
+          label: "Add Categories"
+          placeholder: "Add Categories"
+          alterable: true
+      - name: "title"
+        field:
+          element: "text"
+          label: "Post title"
+          placeholder: "Title"
+          alterable: true
+	 - name: "tags"
+        field:
+          element: "multiselect"
+          label: "Add Tags"
+          placeholder: "Choose Tags"
+          alterable: true
+          options:
+            - name: "language"
+              value: "language"
+            - name: "concurrency"
+              value: "concurrency"
+            - name: "distributed"
+              value: "distributed"
+            - name: "algorithm"
+              value: "algorithm"

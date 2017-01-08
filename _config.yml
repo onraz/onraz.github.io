@@ -27,7 +27,6 @@ exclude:
 
 prose:
   rooturl: '_posts'
-  siteurl: 'https://onraz.github.io'
   media: 'assets'
   metadata:
     _posts:

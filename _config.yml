@@ -20,9 +20,9 @@ exclude:
   - README.md
   - package.json
   - node_modules
-  
-  
-  
+
+
+
 # Prose
 
 prose:
@@ -61,3 +61,13 @@ prose:
               value: "distributed"
             - name: "algorithm"
               value: "algorithm"
+    _posts/static:
+      - name: "layout"
+        field:
+          element: "hidden"
+          value: "page"
+      - name: "permalink"
+        field:
+          element: "text"
+          label: "Permalink"
+          value: ""

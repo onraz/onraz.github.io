@@ -21,7 +21,12 @@ exclude:
   - package.json
   - node_modules
 
-
+# Configuration for articles
+include: ['_pages']
+collections:
+  pages:
+    output: true
+    permalink: /:path
 
 # Prose
 

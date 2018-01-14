@@ -1,42 +1,44 @@
-<!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
-     styles, `#sidebar-checkbox` for behavior. -->
-<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox" checked>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1>
+        <a href="{{ site.baseurl }}">
+          {{ site.title }}
+        </a>
+      </h1>
+      <p class="lead">Dreaming in Software</p>
+    </div>
 
-<!-- Toggleable sidebar -->
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-item">
-    <p>{{ site.description }}</p>
-    <small>{{ site.tagline }}</small>
-  </div>
+    <nav class="sidebar-nav">
+      <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}">Home</a>
 
-  <nav class="sidebar-nav">
-    <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}/">Home</a>
+      {% comment %}
+        The code below dynamically generates a sidebar nav of pages with
+        `layout: page` in the front-matter. See readme for usage.
+      {% endcomment %}
 
-    {% comment %}
-      The code below dynamically generates a sidebar nav of pages with
-      `layout: page` in the front-matter. See readme for usage.
-    {% endcomment %}
-
-    {% assign pages_list = site.pages | sort:"url" %}
-    {% for node in pages_list %}
-      {% if node.title != null %}
-        {% if node.layout == "page" %}
-          <a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="{{ node.url }}">{{ node.title }}</a>
+      {% assign pages_list = site.pages %}
+      {% for node in pages_list %}
+        {% if node.title != null %}
+          {% if node.layout == "page" %}
+            <a class="sidebar-nav-item{% if page.url == node.url %} active{% endif %}" href="{{ node.url }}">{{ node.title }}</a>
+          {% endif %}
         {% endif %}
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
 
-  </nav>
+    </nav>
 
-  <div class="sidebar-item">
-    <a href="https://www.linkedin.com/in/onraz">
-      <img src="/assets/linkedin.png" alt="View my LinkedIn Profile" style="display: inline;">
-    </a>
-    &nbsp;
-    <a href="https://twitter.com/openraz">
-      <img src="/assets/twitter.png" alt="Follow OpenRaz" style="display: inline">
-    </a>
+    <div class="sidebar-item">
+      <a href="https://www.linkedin.com/in/onraz" style="text-decoration: none !important;">
+        <img src="/assets/linkedin.png" alt="View my LinkedIn Profile" style="display: inline;">
+      </a>
+      &nbsp;
+      <a href="https://twitter.com/openraz" style="text-decoration: none !important;">
+        <img src="/assets/twitter.png" alt="Follow OpenRaz" style="display: inline">
+      </a>
+    </div>
+    <br/>
+    <sup>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</sup>
+
   </div>
-
-
 </div>

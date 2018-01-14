@@ -61,7 +61,7 @@ prose:
               value: "distributed"
             - name: "algorithm"
               value: "algorithm"
-    _posts/static:
+    doc:
       - name: "layout"
         field:
           element: "hidden"

@@ -17,8 +17,7 @@ weaknesses of each approach.
 It is common for legacy databases to have a first name, last name and full name columns in the table that represents 
 customers or persons.
 
-For the purposes of this discussion, we would also assume that there are different legacy systems that feed person data 
-in to this database, some may export both first/last and full name, while some may export either first/last names or full name.
+For the purposes of this discussion, we would also assume that there are different legacy systems that feed person data in to this database, some may export both first/last and full name, while some may export either first/last names or full name.
 Our job is to design a java web application that allows CRUD operations on the person database.
 Let’s say for the front end, we only let the user modify the first and last names and their name is generated from 
 the first and last names - which gets displayed in other pages. The user can never enter their full name using the java 
@@ -203,5 +202,5 @@ I'm pretty sure there are many other ways of doing the same thing -
 and most of these are minor variations of each other - so pick an approach 
 that you think is best for your usecase.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc3NTI5MDg0M119
+eyJoaXN0b3J5IjpbODE5MjcyMDczXX0=
 -->

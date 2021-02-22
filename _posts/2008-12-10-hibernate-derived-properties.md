@@ -9,7 +9,7 @@ tags:
 - Hibernate
 - java
 ---
-Couple of days back I had an interesting design discussion with some fellow mates about how to handle a bean property that is derived from other properties of the bean and is also persisted using hibernate. The issue might seem a bit trivial/counter-intuitive at first as a derived property doesn't need to be persisted - as it can always be generated from the other properties.
+XCouple of days back I had an interesting design discussion with some fellow mates about how to handle a bean property that is derived from other properties of the bean and is also persisted using hibernate. The issue might seem a bit trivial/counter-intuitive at first as a derived property doesn't need to be persisted - as it can always be generated from the other properties.
 
 However, this situation may occur in some legacy systems - and we might face a design issue in writing a good way of 
 handling the property. I will be discussing a few of the ways it can be dealt with - looking at the strength and 
@@ -202,5 +202,5 @@ I'm pretty sure there are many other ways of doing the same thing -
 and most of these are minor variations of each other - so pick an approach 
 that you think is best for your usecase.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODE5MjcyMDczXX0=
+eyJoaXN0b3J5IjpbOTI4MjE3OTY3XX0=
 -->

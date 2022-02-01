@@ -67,31 +67,22 @@
             );
         }
     }
-    class Board extends React.Component {
-        constructor(props) {
-            super(props);
-            this.state = {
-                squares : Array(9).fill(null),
-                nextIsX: true,
-                gameEnd: false
-            }
+
+    class Board {
+        squares;
+        nextIsX;
+
+        constructor(nextIsX, squares = Array(9).fill(null)) {
+            this.squares = squares;
+            this.nextIsX = nextIsX;
         }
 
-        handleClick(i) {
-            if (this.state.gameEnd || this.state.squares[i]) {
-                return;
-            }
-            const squares = this.state.squares.slice();
-            squares[i] = this.state.nextIsX ? 'X' : 'O';
-            const gameEnd = this.calculateWinner(squares) || this.calculateDraw(squares);
-            this.setState({
-                squares: squares,
-                nextIsX: !this.state.nextIsX,
-                gameEnd: gameEnd
-            });
+        isValidMove(i) {
+            const gameEnd = this.calculateWinner() || this.calculateDraw();
+            return !(gameEnd || this.squares[i]);
         }
 
-        calculateWinner(squares) {
+        calculateWinner() {
             const lines = [
                 [0, 1, 2],
                 [3, 4, 5],
@@ -103,70 +94,133 @@
                 [2, 4, 6]
             ]
             for (let i = 0; i < lines.length; i++) {
-               const [a, b, c] = lines[i];
-               if (squares[a] && squares[a] === squares[b]
-               && squares[a] === squares[c]) {
-                   return {
-                       player: squares[a],
-                       line: lines[i]
-                   };
-               }
+                const [a, b, c] = lines[i];
+                if (this.squares[a] && this.squares[a] === this.squares[b]
+                    && this.squares[a] === this.squares[c]) {
+                    return {
+                        player: this.squares[a],
+                        line: lines[i]
+                    };
+                }
             }
             return null;
         }
 
-        newGame() {
-            this.setState({
-                squares : Array(9).fill(null),
-                nextIsX: true,
-                gameEnd: false
-            });
-        }
-
-        calculateDraw(squares) {
-            for (let i = 0; i < squares.length; i++) {
-                if (!squares[i]) {
+        calculateDraw() {
+            for (let i = 0; i < this.squares.length; i++) {
+                if (!this.squares[i]) {
                     return false;
                 }
             }
             return true;
         }
-        
-        renderSquare(i, line) {
-            let winningSquare = false;
-            if (i == line[0] || i == line[1] || i == line[2]) {
-                winningSquare = true
+
+        move(i) {
+            const squares = this.squares.slice();
+            squares[i] = this.nextIsX ? 'X' : 'O';
+            return new Board(!this.nextIsX, squares)
+        }
+
+        getLegalMoves() {
+            let moves = [];
+            for (let i = 0; i < this.squares.length; i++) {
+                if (!this.squares[i]) {
+                    moves.push(i);
+                }
             }
+            return moves;
+        }
+
+        evaluate() {
+            if (this.calculateWinner()) {
+                return this.nextIsX ? 1 : -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    function findBestMove(board, depth) {
+        let bestMove = null;
+        let bestEval = Number.NEGATIVE_INFINITY;
+        for (const move of board.getLegalMoves()) {
+            let result = minimax(board.move(move), depth, false)
+            if (result > bestEval) {
+                bestEval = result;
+                bestMove = move;
+            }
+        }
+        return bestMove;
+    }
+
+    function minimax(board, depth, maximizing) {
+        if (board.calculateWinner() || board.calculateDraw() || depth == 0) {
+            return board.evaluate();
+        }
+        if (maximizing) {
+            let bestEval = Number.NEGATIVE_INFINITY;
+            for (const move of board.getLegalMoves()) {
+                let result = minimax(board.move(move), depth - 1, false)
+                if (result > bestEval) {
+                    bestEval = result;
+                }
+            }
+            return bestEval;
+        } else { // minimize
+            let worstEval = Number.POSITIVE_INFINITY;
+            for (const move of board.getLegalMoves()) {
+                let result = minimax(board.move(move), depth - 1, true)
+                if (result < worstEval) {
+                    worstEval = result;
+                }
+            }
+            return worstEval;
+        }
+    }
+
+
+    class Game extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                board: new Board(true),
+                difficulty: 8
+            }
+        }
+
+        handleClick(i) {
+            if (!this.state.board.isValidMove(i)) {
+                return;
+            }
+            let board = this.state.board.move(i);
+            let cpuMove = findBestMove(board, this.state.difficulty)
+            board = board.move(cpuMove)
+            console.log(board.getLegalMoves() + " human " + i + " cpu " + cpuMove);
+            this.setState({
+                board: board
+            });
+        }
+
+
+        newGame() {
+            this.setState({
+                board: new Board(true),
+                difficulty: 8
+            });
+        }
+
+        renderSquare(i, line) {
             return (
-                <Square value={this.state.squares[i]} winningSquare={winningSquare}
+                <Square value={this.state.board.squares[i]} winningSquare={line.includes(i)}
                         onClick={() => this.handleClick(i)}/>
             );
         }
 
-        render() {
-            let status;
-            let line = [-1, -1, -1];
-            const winner = this.calculateWinner(this.state.squares);
-            if (this.state.gameEnd) {
-                if (winner) {
-                    line = winner.line;
-                    status = 'Winner ' + winner.player;
-                } else {
-                    const draw = this.calculateDraw(this.state.squares);
-                    if (draw) {
-                        status = 'Draw between X and O ';
-                    } else {
-                        status = 'Error';
-                    }
-                }
-            } else {
-                status = 'Next player: ' + (this.state.nextIsX ? 'X' : 'O');
-            }
-
+        renderBoard(status, line, gameEnd) {
             return (
                 <div>
                     <div className="status">{status}</div>
-                    <div className={this.state.gameEnd ? 'board gameEnd' : 'board'}>
+                    <div className={gameEnd ? 'board gameEnd' : 'board'}>
                         <div className="board-row">
                             {this.renderSquare(0, line)}
                             {this.renderSquare(1, line)}
@@ -191,10 +245,31 @@
             );
         }
 
+        render() {
+            let status;
+            let line = [-1, -1, -1];
+            let gameEnd = false;
+            const winner = this.state.board.calculateWinner();
+            if (winner) {
+                gameEnd = true;
+                line = winner.line;
+                status = 'Winner ' + winner.player;
+            } else {
+                const draw = this.state.board.calculateDraw();
+                if (draw) {
+                    gameEnd = true;
+                    status = 'Draw between X and O ';
+                } else {
+                    status = 'Next player: ' + (this.state.board.nextIsX ? 'X' : 'O');
+                }
+            }
+
+            return this.renderBoard(status, line, gameEnd)
+        }
     }
 
     ReactDOM.render(
-        <Board />,
+        <Game />,
         document.getElementById('root')
     );
 </script>

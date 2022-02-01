@@ -6,6 +6,10 @@
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <style>
+        body {
+            padding-left: 20px;
+            padding-top: 10px;
+        }
         .board-row:after {
             display: table;
             clear: both;
@@ -24,11 +28,11 @@
             background: #fff;
             border: 1px solid #999;
             float: left;
-            font-size: 74px;
+            font-size: 94px;
             font-weight: bold;
-            line-height: 84px;
-            width: 84px;
-            height: 84px;
+            line-height: 104px;
+            width: 104px;
+            height: 104px;
             margin-right: 0px;
             margin-top: 0px;
             padding: 0;
@@ -53,7 +57,8 @@
     </style>
 </head>
 <body>
-<h3>Welcome Rahil</h3>
+<h3 style="font-family: 'Comic Sans MS'">Welcome to Rahil's Tic Tac Toe</h3>
+<p style="font-family: 'Comic Sans MS'">Human Plays as <b>X</b> and Computer plays as <b>O</b></p>
 <div id="root"></div>
 <script type="text/babel">
     'use strict';
@@ -141,9 +146,11 @@
     }
 
     function findBestMove(board, depth) {
+        // first bootstrap MAXIMIZE
         let bestMove = null;
         let bestEval = Number.NEGATIVE_INFINITY;
         for (const move of board.getLegalMoves()) {
+            // first maximize, then move and minimize
             let result = minimax(board.move(move), depth, false)
             if (result > bestEval) {
                 bestEval = result;
@@ -157,7 +164,7 @@
         if (board.calculateWinner() || board.calculateDraw() || depth == 0) {
             return board.evaluate();
         }
-        if (maximizing) {
+        if (maximizing) { // maximize, then move and minimize
             let bestEval = Number.NEGATIVE_INFINITY;
             for (const move of board.getLegalMoves()) {
                 let result = minimax(board.move(move), depth - 1, false)
@@ -166,7 +173,7 @@
                 }
             }
             return bestEval;
-        } else { // minimize
+        } else { // minimize, then move and maximize
             let worstEval = Number.POSITIVE_INFINITY;
             for (const move of board.getLegalMoves()) {
                 let result = minimax(board.move(move), depth - 1, true)
